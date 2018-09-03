@@ -60,12 +60,12 @@
               </li>
               <li class="regi_form_input noMargin">
                 <i class="icon IconPwd"></i>
-                <input type="password" tabindex="2" name="password" v-model="userPwd" class="regi_login_input">
+                <input type="password" tabindex="2" name="password" v-model="userPwd" class="regi_login_input" @keyup.enter="login">
               </li>
             </ul>
           </div>
           <div class="login-wrap">
-            <a href="javascript:;" class="btn-login" @click="login" @keyup.enter="login">登陆</a>
+            <a href="javascript:;" class="btn-login" @click="login">登陆</a>
           </div>
         </div>
       </div>
@@ -91,20 +91,13 @@ export default {
   },
   methods: {
     checkLogin () {
-      let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-      if (userInfo !== {} && userInfo !== null && userInfo !== []) {
-        this.nickName = userInfo.userName
-      } else {
-        this.$axios.get('/users/checkLogin')
-          .then(response => {
-            let res = response.data
-            if (res.status === 0) {
-              this.nickName = res.result.userName
-              let userInfo = {userName: res.result.userName, userId: res.result.userId}
-              sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-            }
-          })
-      }
+      this.$axios.get('/users/checkLogin')
+        .then(response => {
+          let res = response.data
+          if (res.status === 0) {
+            this.nickName = res.result.userName
+          }
+        })
     },
     login () {
       if (!this.userName || !this.userPwd) {
@@ -119,8 +112,6 @@ export default {
             this.errorTip = false
             this.loginModalFlag = false
             this.nickName = res.result.userName
-            let userInfo = {userName: res.result.userName, userId: res.result.userId}
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
           } else {
             this.errorTip = true
           }
@@ -131,7 +122,6 @@ export default {
       this.errorTip = false
     },
     logout () {
-      sessionStorage.removeItem('userInfo')
       this.$axios.post('/users/logout')
         .then(response => {
           let res = response.data

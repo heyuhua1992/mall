@@ -1,5 +1,9 @@
 <template>
 <div>
+  <NavHeader></NavHeader>
+  <NavBread>
+    <span slot="bread">我的购物车</span>
+  </NavBread>
   <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
@@ -41,56 +45,56 @@
   <div class="container">
     <div class="cart">
       <div class="page-title-normal">
-        <h2 class="page-title-h2"><span>My Cart</span></h2>
+        <h2 class="page-title-h2"><span>我的购物车</span></h2>
       </div>
       <div class="item-list-wrap">
         <div class="cart-item">
           <div class="cart-item-head">
             <ul>
-              <li>Items</li>
-              <li>Price</li>
-              <li>Quantity</li>
-              <li>Subtotal</li>
-              <li>Edit</li>
+              <li>商品信息</li>
+              <li>单价</li>
+              <li>数量</li>
+              <li>金额</li>
+              <li>操作</li>
             </ul>
           </div>
           <ul class="cart-item-list">
             <li v-for="(item, index) in cartList" :key="`cartList${index}`">
               <div class="cart-tab-1">
                 <div class="cart-item-check">
-                  <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{'check':item.checked=='1'}" @click="editCart('checked',item)">
+                  <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check':item.checked}" @click="editCart('checked',item)">
                     <svg class="icon icon-ok">
                       <use xlink:href="#icon-ok"></use>
                     </svg>
                   </a>
                 </div>
                 <div class="cart-item-pic">
-                  <img src="/static/1.jpg">
+                  <img :src="`/static/${item.productImage}`" :alt="item.productName">
                 </div>
                 <div class="cart-item-title">
-                  <div class="item-name">XX</div>
+                  <div class="item-name">{{item.productName}}</div>
                 </div>
               </div>
               <div class="cart-tab-2">
-                <div class="item-price">1000</div>
+                <div class="item-price">{{item.salePrice | currency('￥')}}</div>
               </div>
               <div class="cart-tab-3">
                 <div class="item-quantity">
                   <div class="select-self select-self-open">
                     <div class="select-self-area">
-                      <a class="input-sub">-</a>
-                      <span class="select-ipt">10</span>
-                      <a class="input-add">+</a>
+                      <a class="input-sub" @click="editCart('minus', item)">-</a>
+                      <span class="select-ipt">{{item.productNum}}</span>
+                      <a class="input-add" @click="editCart('add', item)">+</a>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="cart-tab-4">
-                <div class="item-price-total">100</div>
+                <div class="item-price-total">{{subPrice(item.salePrice, item.productNum) | currency('￥')}}</div>
               </div>
               <div class="cart-tab-5">
                 <div class="cart-item-opration">
-                  <a href="javascript:;" class="item-edit-btn">
+                  <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
                     <svg class="icon icon-del">
                       <use xlink:href="#icon-del"></use>
                     </svg>
@@ -105,34 +109,152 @@
         <div class="cart-foot-inner">
           <div class="cart-foot-l">
             <div class="item-all-check">
-              <a href="javascipt:;">
-                    <span class="checkbox-btn item-check-btn">
+              <a href="JavaScipt:;" @click="toggleCheckAll">
+                    <span class="checkbox-btn item-check-btn" :class="{'check': checkAllFlag}">
                         <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                     </span>
-                <span>Select all</span>
+                <span>全选</span>
               </a>
             </div>
           </div>
           <div class="cart-foot-r">
             <div class="item-total">
-              Item total: <span class="total-price">500</span>
+              合计: <span class="total-price">{{totalPrice | currency('￥')}}</span>
             </div>
             <div class="btn-wrap">
-              <a class="btn btn--red">Checkout</a>
+              <a class="btn btn--red">结算</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <Modal :mdShow="modalConfirm" @close="closeModal">
+    <p slot="message">你确认要删除吗？</p>
+    <div slot="btnGroup">
+      <a href="javascript:;" class="btn btn--m" @click="delCart">确认</a>
+      <a href="javascript:;" class="btn btn--m" @click="modalConfirm = false">关闭</a>
+    </div>
+  </Modal>
+  <NavFooter></NavFooter>
 </div>
 </template>
 
 <script>
-export default {}
+import NavHeader from '@/components/navHeader'
+import NavFooter from '@/components/navFooter'
+import NavBread from '@/components/navBread'
+import Modal from '@/components/modal'
+
+export default {
+  data () {
+    return {
+      cartList: [],
+      modalConfirm: false,
+      productId: -1
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  methods: {
+    init () {
+      this.$axios.get('/users/cartList')
+        .then(response => {
+          let res = response.data
+          this.$set(this, 'cartList', res.result)
+        })
+    },
+    subPrice (price, num) {
+      let nowPrice = (price - 0) * (num - 0)
+      return Math.ceil(nowPrice * 100) / 100
+    },
+    closeModal () {
+      this.modalConfirm = false
+    },
+    delCartConfirm (productId) {
+      this.productId = productId
+      this.modalConfirm = true
+    },
+    delCart () {
+      this.$axios.post('/users/cartDel', {productId: this.productId})
+        .then(response => {
+          let res = response.data
+          if (res.status === 0) {
+            this.modalConfirm = false
+            this.init()
+          }
+        })
+    },
+    editCart (type, item) {
+      if (type === 'add') {
+        item.productNum++
+      } else if (type === 'minus') {
+        if (item.productNum <= 1) {
+          return
+        }
+        item.productNum--
+      } else if (type === 'checked') {
+        item.checked = !item.checked
+      }
+      this.$axios.post('/users/cartEdit', {
+        productId: item.productId,
+        productNum: item.productNum,
+        checked: item.checked
+      })
+        .then(response => {
+          let res = response.data
+          if (res.status !== 0) {
+            console.log(res.msg)
+          }
+        })
+    },
+    toggleCheckAll () {
+      let flag = !this.checkAllFlag
+      this.cartList.forEach(item => {
+        item.checked = flag
+      })
+      this.$axios.post('/users/editCheckAll', {checkAll: flag})
+        .then(response => {
+          let res = response.data
+          if (res.status === 0) {
+            console.log('update suc')
+          }
+        })
+    }
+  },
+  computed: {
+    checkAllFlag () {
+      if (this.cartList.length === 0) { return }
+      let isCheckAll = true
+      this.cartList.forEach(item => {
+        if (!item.checked) {
+          isCheckAll = false
+        }
+      })
+      return isCheckAll
+    },
+    totalPrice () {
+      let money = 0
+      this.cartList.forEach(item => {
+        if (item.checked) {
+          money += this.subPrice(item.salePrice, item.productNum)
+        }
+      })
+      return money
+    }
+  },
+  components: {
+    NavHeader,
+    NavFooter,
+    NavBread,
+    Modal
+  }
+}
 </script>
 
 <style lang="scss">
+@import '../assets/scss/checkout.scss';
 .input-sub,.input-add{
   min-width: 40px;
   height: 100%;

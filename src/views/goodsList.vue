@@ -45,20 +45,27 @@
         <div class="accessory-list-wrap">
           <div class="accessory-list col-4">
             <ul>
-              <li v-for="(item, index) in goodsList" :key="'goodsList'+index">
+              <li v-for="(item, index) in goodsList" :key="`goodsList${index}`">
                 <div class="pic">
-                  <a href="#"><img v-lazy="'static/' + item.productImage" alt=""></a>
+                  <a href="javascript:;">
+                    <img v-lazy="`/static/${item.productImage}`" :key="`static_1${item.productImage}`" :alt="item.productName">
+                  </a>
                 </div>
                 <div class="main">
                   <div class="name">{{item.productName}}</div>
-                  <div class="price">{{item.salePrice}}</div>
+                  <div class="price">{{item.salePrice | currency('￥')}}</div>
                   <div class="btn-area">
-                    <a href="javascript:;" class="btn" @click="addCart(item.productId)">加入购物车</a>
+                    <a href="javascript:;" class="btn" @click="addCart(item.productId)">
+                      加入购物车
+                    </a>
                   </div>
                 </div>
               </li>
             </ul>
-            <div class="load-more" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+            <div class="load-more"
+                 v-infinite-scroll="loadMore"
+                 infinite-scroll-disabled="busy"
+                 infinite-scroll-distance="10">
               <img src="static/loading-svg/loading-spinning-bubbles.svg" v-show="Loading">
             </div>
           </div>
@@ -170,7 +177,7 @@ export default {
     sortGoods () {
       this.sortFlag = !this.sortFlag
       this.page = 1
-      this.getGoodsList()
+      this.getGoodsList(false)
     },
     showFilterPop () {
       this.filterBy = true
@@ -204,8 +211,8 @@ export default {
         })
     },
     closeModal () {
-       this.mdShow = false
-       this.mdShowCart = false
+      this.mdShow = false
+      this.mdShowCart = false
     }
   },
   components: {
