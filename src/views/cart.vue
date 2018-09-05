@@ -94,7 +94,7 @@
               </div>
               <div class="cart-tab-5">
                 <div class="cart-item-opration">
-                  <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
+                  <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item)">
                     <svg class="icon icon-del">
                       <use xlink:href="#icon-del"></use>
                     </svg>
@@ -151,10 +151,11 @@ export default {
     return {
       cartList: [],
       modalConfirm: false,
-      productId: -1
+      delItem: {}
     }
   },
   mounted () {
+    if (document.cookie.indexOf('userId') === -1) { return }
     this.init()
   },
   methods: {
@@ -172,17 +173,18 @@ export default {
     closeModal () {
       this.modalConfirm = false
     },
-    delCartConfirm (productId) {
-      this.productId = productId
+    delCartConfirm (item) {
+      this.delItem = item
       this.modalConfirm = true
     },
     delCart () {
-      this.$axios.post('/users/cartDel', {productId: this.productId})
+      this.$axios.post('/users/cartDel', {productId: this.delItem.productId})
         .then(response => {
           let res = response.data
           if (res.status === 0) {
             this.modalConfirm = false
             this.init()
+            this.$store.commit('updateCartCount', -this.delItem.productNum)
           }
         })
     },
@@ -204,8 +206,14 @@ export default {
       })
         .then(response => {
           let res = response.data
-          if (res.status !== 0) {
-            console.log(res.msg)
+          if (res.status === 0) {
+            let num = 0
+            if (type === 'add') {
+              num = 1
+            } else if (type === 'minus') {
+              num = -1
+            }
+            this.$store.commit('updateCartCount', num)
           }
         })
     },

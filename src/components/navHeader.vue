@@ -28,7 +28,7 @@
           <a href="javascript:void(0)" class="navbar-link" @click="setFlag(true)" v-if="!nickName">Login</a>
           <a href="javascript:void(0)" class="navbar-link" @click="logout" v-if="nickName">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count" v-show="cartCount">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/cart">
               <svg class="navbar-cart-logo">
                 <use xlink:href="#icon-cart"></use>
@@ -76,18 +76,18 @@
 
 <script>
 import '@/assets/scss/login.scss'
+import {mapState} from 'vuex'
 export default {
+  mounted () {
+    this.checkLogin()
+  },
   data () {
     return {
       userName: '',
       userPwd: '',
       errorTip: false,
-      loginModalFlag: false,
-      nickName: ''
+      loginModalFlag: false
     }
-  },
-  mounted () {
-    this.checkLogin()
   },
   methods: {
     checkLogin () {
@@ -95,7 +95,15 @@ export default {
         .then(response => {
           let res = response.data
           if (res.status === 0) {
-            this.nickName = res.result.userName
+            this.$store.commit('updateUserInfo', res.result.userName)
+            this.getCartCount()
+            this.loginModalFlag = false
+          } else {
+            if (this.$route.path !== '/') {
+              this.$router.push({
+                path: '/'
+              })
+            }
           }
         })
     },
@@ -111,7 +119,8 @@ export default {
           if (res.status === 0) {
             this.errorTip = false
             this.loginModalFlag = false
-            this.nickName = res.result.userName
+            this.$store.commit('updateUserInfo', res.result.userName)
+            this.getCartCount()
           } else {
             this.errorTip = true
           }
@@ -126,10 +135,29 @@ export default {
         .then(response => {
           let res = response.data
           if (res.status === 0) {
-            this.$set(this, 'nickName', '')
+            this.$store.commit('updateUserInfo', '')
+            this.$store.commit('updateCartCount', 0)
+          }
+        })
+    },
+    getCartCount () {
+      this.$axios.get('/users/getCartCount')
+        .then(response => {
+          let res = response.data
+          if (res.status === 0) {
+            this.$store.commit('initCartCount', res.result)
           }
         })
     }
+  },
+  computed: {
+    ...mapState(['nickName', 'cartCount'])
+    // nickName () {
+    //   return this.$store.state.nickName
+    // },
+    // cartCount () {
+    //   return this.$store.state.cartCount
+    // }
   }
 }
 </script>
