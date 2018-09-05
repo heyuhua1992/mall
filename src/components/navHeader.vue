@@ -125,6 +125,12 @@ export default {
           if (res.status === 0) {
             this.$store.commit('updateUserInfo', '')
             this.$store.commit('updateCartCount', 0)
+            sessionStorage.removeItem('userName')
+            if (this.$route.path === '/') {
+              this.$router.go(0)
+            } else {
+              this.$router.push({path: '/'})
+            }
           }
         })
     },
