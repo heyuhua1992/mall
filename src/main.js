@@ -7,9 +7,11 @@ import Vuex from './vuex/index'
 import Router from './router/index'
 import VueLazyLoad from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
-import './assets/scss/base.scss'
-import './assets/scss/product.scss'
+import '@/assets/scss/base.scss'
+import '@/assets/scss/product.scss'
+import '@/assets/scss/checkout.scss'
 import {currency} from '@/util/currency'
+
 Vue.config.productionTip = false
 Vue.use(infiniteScroll)
 Vue.prototype.$axios = axios

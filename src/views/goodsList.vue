@@ -11,7 +11,7 @@
         <a href="javascript:void(0)" class="default">
           默认
         </a>
-        <a href="javascript:void(0)" class="price cur" :class="{'sort-up': !sortFlag}" @click="sortGoods">
+        <a href="javascript:void(0)" class="price cur" :class="{'sort-up': sortFlag}" @click="sortGoods">
           价格
           <svg class="icon-arrow-short">
             <use xlink:href="#icon-arrow-short"></use>

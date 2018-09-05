@@ -122,7 +122,7 @@
               合计: <span class="total-price">{{totalPrice | currency('￥')}}</span>
             </div>
             <div class="btn-wrap">
-              <a class="btn btn--red">结算</a>
+              <a class="btn btn--red" :class="{'btn--dis': totalPrice <= 0}" @click="checkOut">结 算</a>
             </div>
           </div>
         </div>
@@ -218,9 +218,22 @@ export default {
         .then(response => {
           let res = response.data
           if (res.status === 0) {
-            console.log('update suc')
+            // todo
           }
         })
+    },
+    checkOut () {
+      let isGo = false
+      this.cartList.forEach(item => {
+        if (item.checked) {
+          isGo = true
+        }
+      })
+      if (isGo) {
+        this.$router.push({
+          path: '/address'
+        })
+      }
     }
   },
   computed: {
@@ -254,7 +267,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/scss/checkout.scss';
 .input-sub,.input-add{
   min-width: 40px;
   height: 100%;
