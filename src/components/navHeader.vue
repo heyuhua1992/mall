@@ -24,9 +24,9 @@
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <!--<a href="/" class="navbar-link">我的账户</a>-->
-          <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
-          <a href="javascript:void(0)" class="navbar-link" @click="setFlag(true)" v-if="!nickName">Login</a>
-          <a href="javascript:void(0)" class="navbar-link" @click="logout" v-if="nickName">Logout</a>
+          <span class="navbar-link" v-text="`欢迎您，${nickName}`" v-if="nickName"></span>
+          <a href="javascript:void(0)" class="navbar-link" @click="setFlag(true)" v-if="!nickName">登陆</a>
+          <a href="javascript:void(0)" class="navbar-link" @click="logout" v-if="nickName">退出</a>
           <div class="navbar-cart-container">
             <span class="navbar-cart-count" v-show="cartCount">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/cart">
@@ -77,9 +77,11 @@
 <script>
 import '@/assets/scss/login.scss'
 import {mapState} from 'vuex'
+import {apiLogin, apiLogout, apiGetCartCount} from '@/api/api'
+
 export default {
   mounted () {
-    this.checkLogin()
+    this.init()
   },
   data () {
     return {
@@ -90,22 +92,10 @@ export default {
     }
   },
   methods: {
-    checkLogin () {
-      this.$axios.get('/users/checkLogin')
-        .then(response => {
-          let res = response.data
-          if (res.status === 0) {
-            this.$store.commit('updateUserInfo', res.result.userName)
-            this.getCartCount()
-            this.loginModalFlag = false
-          } else {
-            if (this.$route.path !== '/') {
-              this.$router.push({
-                path: '/'
-              })
-            }
-          }
-        })
+    init () {
+      this.$store.commit('updateUserInfo', sessionStorage.getItem('userName'))
+      this.getCartCount()
+      this.loginModalFlag = false
     },
     login () {
       if (!this.userName || !this.userPwd) {
@@ -113,9 +103,8 @@ export default {
         return
       }
       this.errorTip = false
-      this.$axios.post('/users/login', {userName: this.userName, userPwd: this.userPwd})
-        .then(response => {
-          let res = response.data
+      apiLogin({userName: this.userName, userPwd: this.userPwd})
+        .then(res => {
           if (res.status === 0) {
             this.errorTip = false
             this.loginModalFlag = false
@@ -131,9 +120,8 @@ export default {
       this.errorTip = false
     },
     logout () {
-      this.$axios.post('/users/logout')
-        .then(response => {
-          let res = response.data
+      apiLogout()
+        .then(res => {
           if (res.status === 0) {
             this.$store.commit('updateUserInfo', '')
             this.$store.commit('updateCartCount', 0)
@@ -141,9 +129,8 @@ export default {
         })
     },
     getCartCount () {
-      this.$axios.get('/users/getCartCount')
-        .then(response => {
-          let res = response.data
+      apiGetCartCount()
+        .then(res => {
           if (res.status === 0) {
             this.$store.commit('initCartCount', res.result)
           }

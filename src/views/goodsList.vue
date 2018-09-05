@@ -2,7 +2,7 @@
 <div>
   <NavHeader></NavHeader>
   <NavBread>
-    <span slot="bread">GGG</span>
+    <span slot="bread"></span>
   </NavBread>
   <div class="accessory-result-page accessory-page">
     <div class="container">
@@ -101,6 +101,7 @@ import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
 import Modal from '@/components/modal'
+import {apiList, apiAddCart} from '@/api/api'
 export default {
   mounted () {
     this.getGoodsList()
@@ -150,9 +151,8 @@ export default {
         priceLevel: this.priceChecked
       }
       this.Loading = true
-      this.$axios.get('/goods/list', {params: param})
-        .then(response => {
-          let res = response.data
+      apiList({params: param})
+        .then(res => {
           this.Loading = false
           if (res.status === 0) {
             if (flag) {
@@ -201,9 +201,9 @@ export default {
       }, 500)
     },
     addCart (productId) {
-      this.$axios.post('/goods/addCart', {productId: productId})
+      apiAddCart({productId: productId})
         .then(res => {
-          if (res.data.status === 0) {
+          if (res.status === 0) {
             this.mdShowCart = true
             this.$store.commit('updateCartCount', 1)
           } else {

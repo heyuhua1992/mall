@@ -145,7 +145,7 @@ import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
 import Modal from '@/components/modal'
-
+import {apiCartList, apiCartDel, apiCartEdit, apiEditCheckAll} from '@/api/api'
 export default {
   data () {
     return {
@@ -155,14 +155,12 @@ export default {
     }
   },
   mounted () {
-    if (document.cookie.indexOf('userId') === -1) { return }
     this.init()
   },
   methods: {
     init () {
-      this.$axios.get('/users/cartList')
-        .then(response => {
-          let res = response.data
+      apiCartList()
+        .then(res => {
           this.$set(this, 'cartList', res.result)
         })
     },
@@ -178,9 +176,8 @@ export default {
       this.modalConfirm = true
     },
     delCart () {
-      this.$axios.post('/users/cartDel', {productId: this.delItem.productId})
-        .then(response => {
-          let res = response.data
+      apiCartDel({productId: this.delItem.productId})
+        .then(res => {
           if (res.status === 0) {
             this.modalConfirm = false
             this.init()
@@ -199,13 +196,12 @@ export default {
       } else if (type === 'checked') {
         item.checked = !item.checked
       }
-      this.$axios.post('/users/cartEdit', {
+      apiCartEdit({
         productId: item.productId,
         productNum: item.productNum,
         checked: item.checked
       })
-        .then(response => {
-          let res = response.data
+        .then(res => {
           if (res.status === 0) {
             let num = 0
             if (type === 'add') {
@@ -222,9 +218,8 @@ export default {
       this.cartList.forEach(item => {
         item.checked = flag
       })
-      this.$axios.post('/users/editCheckAll', {checkAll: flag})
-        .then(response => {
-          let res = response.data
+      apiEditCheckAll({checkAll: flag})
+        .then(res => {
           if (res.status === 0) {
             // todo
           }

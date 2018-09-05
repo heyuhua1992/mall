@@ -18,6 +18,10 @@ const routes = [
   {
     path: '/orderSuccess',
     component: resolve => require(['@/views/orderSuccess'], resolve)
+  },
+  {
+    path: '/other',
+    component: resolve => require(['@/views/other'], resolve)
   }
 ]
 

@@ -131,7 +131,7 @@
 import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
-
+import {apiCartList, apiPayMent} from '@/api/api'
 export default {
   mounted () {
     this.init()
@@ -147,9 +147,8 @@ export default {
   },
   methods: {
     init () {
-      this.$axios.get('/users/cartList')
-        .then(response => {
-          let res = response.data
+      apiCartList()
+        .then(res => {
           this.$set(this, 'cartList', res.result)
           this.cartList.forEach(item => {
             if (item.checked === true) {
@@ -160,12 +159,11 @@ export default {
         })
     },
     payMent () {
-      this.$axios.post('/users/payMent', {
+      apiPayMent({
         addressId: this.$route.query.addressId,
         orderTotal: this.orderTotal
       })
-        .then(response => {
-          let res = response.data
+        .then(res => {
           if (res.status === 0) {
             this.$router.push({
               path: '/orderSuccess',

@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import axios from 'axios'
 import Vuex from './vuex/index'
-import Router from './router/index'
+import {router} from './router/index'
 import VueLazyLoad from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import '@/assets/scss/base.scss'
@@ -23,7 +23,7 @@ Vue.filter('currency', currency) // 总价格过滤器
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router: Router,
+  router: router,
   store: Vuex,
   render: h => h(App)
 })

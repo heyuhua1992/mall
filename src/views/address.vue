@@ -174,6 +174,7 @@ import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
 import Modal from '@/components/modal'
+import {apiAddressList, apiSetDefault, apiDelAddress} from '@/api/api'
 const _LIMIT = 3
 export default {
   data () {
@@ -191,9 +192,8 @@ export default {
   },
   methods: {
     init () {
-      this.$axios.post('/users/addressList', {})
-        .then(response => {
-          let res = response.data
+      apiAddressList()
+        .then(res => {
           if (res.status === 0) {
             this.$set(this, 'addressList', res.result)
           }
@@ -210,14 +210,12 @@ export default {
       }
     },
     setDefault (addressId) {
-      this.$axios.post('/users/setDefault', {
-        addressId: addressId
-      }).then(response => {
-        let res = response.data
-        if (res.status === 0) {
-          this.init()
-        }
-      })
+      apiSetDefault({addressId: addressId})
+        .then(res => {
+          if (res.status === 0) {
+            this.init()
+          }
+        })
     },
     closeModal () {
       this.isMdShow = false
@@ -228,9 +226,8 @@ export default {
       this.addressId = addressId
     },
     delAddress () {
-      this.$axios.post('/users/delAddress', {addressId: this.addressId})
-        .then(response => {
-          let res = response.data
+      apiDelAddress({addressId: this.addressId})
+        .then(res => {
           if (res.status === 0) {
             this.isMdShow = false
             this.init()

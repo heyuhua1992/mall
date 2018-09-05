@@ -48,16 +48,15 @@
 import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
-
+import {apiOrderDetail} from '@/api/api'
 export default {
   mounted () {
     let orderId = this.$route.query.orderId
     if (!orderId) {
       return
     }
-    this.$axios.get('/users/orderDetail', {params: {orderId: orderId}})
-      .then(response => {
-        let res = response.data
+    apiOrderDetail({params: {orderId: orderId}})
+      .then(res => {
         if (res.status === 0) {
           this.orderId = orderId
           this.orderTotal = res.result.orderTotal
