@@ -8,10 +8,10 @@
     <div class="container">
       <div class="filter-nav">
         <span class="sortby">排序:</span>
-        <a href="javascript:void(0)" class="default">
+        <a href="javascript:void(0)" class="default" @click="defGoods" :class="{'cur': defFlag}">
           默认
         </a>
-        <a href="javascript:void(0)" class="price cur" :class="{'sort-up': sortFlag}" @click="sortGoods">
+        <a href="javascript:void(0)" class="price" :class="{'sort-up': !defFlag && sortFlag, 'cur': !defFlag}" @click="sortGoods">
           价格
           <svg class="icon-arrow-short">
             <use xlink:href="#icon-arrow-short"></use>
@@ -126,13 +126,14 @@ export default {
         },
         {
           startPrice: '2000.00',
-          endPrice: '9999.00'
+          endPrice: ''
         }
       ],
       // 价格过滤，当前选中项
       priceChecked: 'all',
       filterBy: false,
       overLayFlag: false,
+      defFlag: true,
       sortFlag: true, // 升序降序
       page: 1, // 当前页
       pageSize: 8, // 每页内容
@@ -175,7 +176,14 @@ export default {
         })
     },
     sortGoods () {
+      this.defFlag = false
       this.sortFlag = !this.sortFlag
+      this.page = 1
+      this.getGoodsList(false)
+    },
+    defGoods () {
+      this.defFlag = true
+      this.sortFlag = true
       this.page = 1
       this.getGoodsList(false)
     },
