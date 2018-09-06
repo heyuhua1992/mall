@@ -25,6 +25,12 @@
           <dl class="filter-price">
             <dt>价格:</dt>
             <dd>
+              <div class="priceFilter">
+                <input type="text" placeholder="最低价" v-model="priceRange.startPrice">-<input type="text" placeholder="最高价" v-model="priceRange.endPrice">
+                <input type="button" value="查找" @click="setPriceFilter('input')">
+              </div>
+            </dd>
+            <dd>
               <a href="javascript:void(0)"
                  @click="setPriceFilter('all')"
                  :class="{cur: priceChecked === 'all'}">
@@ -113,24 +119,28 @@ export default {
       // 价格过滤列表
       priceFilter: [
         {
-          startPrice: '0.00',
-          endPrice: '500.00'
+          startPrice: 0,
+          endPrice: 500
         },
         {
-          startPrice: '500.00',
-          endPrice: '1000.00'
+          startPrice: 500,
+          endPrice: 1000
         },
         {
-          startPrice: '1000.00',
-          endPrice: '2000.00'
+          startPrice: 1000,
+          endPrice: 2000
         },
         {
-          startPrice: '2000.00',
+          startPrice: 2000,
           endPrice: ''
         }
       ],
       // 价格过滤，当前选中项
       priceChecked: 'all',
+      priceRange: {
+        startPrice: '',
+        endPrice: ''
+      },
       filterBy: false,
       overLayFlag: false,
       defFlag: true,
@@ -149,7 +159,7 @@ export default {
         page: this.page,
         pageSize: this.pageSize,
         sort: this.sortFlag ? 1 : -1,
-        priceLevel: this.priceChecked
+        priceRange: this.priceRange
       }
       this.Loading = true
       apiList({params: param})
@@ -196,6 +206,14 @@ export default {
       this.overLayFlag = false
     },
     setPriceFilter (index) {
+      if (index === 'all') {
+        this.priceRange = {
+          startPrice: '',
+          endPrice: ''
+        }
+      } else if (index !== 'input') {
+        this.priceRange = JSON.parse(JSON.stringify(this.priceFilter[index]))
+      }
       this.priceChecked = index
       this.closePop()
       this.page = 1
@@ -234,4 +252,14 @@ export default {
 </script>
 
 <style lang="scss">
+.priceFilter {
+  input {
+    padding: .2rem;
+    width: 28%;
+  }
+  input[type='button'] {
+    padding: .1rem;
+    width: auto;
+  }
+}
 </style>
