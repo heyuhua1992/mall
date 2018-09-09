@@ -11,15 +11,17 @@ import '@/assets/scss/base.scss'
 import '@/assets/scss/product.scss'
 import '@/assets/scss/checkout.scss'
 import {currency} from '@/util/currency'
+import toast from '@/util/toast'
 
 Vue.config.productionTip = false
 Vue.use(infiniteScroll)
 Vue.prototype.$axios = axios
 Vue.use(VueLazyLoad, {
-  loading: '/static/loading-svg/loading-bars.svg'
+  loading: '/static/loading-bars.svg'
 })
 // 全局过滤器
 Vue.filter('currency', currency) // 总价格过滤器
+Vue.use(toast)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

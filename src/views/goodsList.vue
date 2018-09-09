@@ -72,7 +72,7 @@
                  v-infinite-scroll="loadMore"
                  infinite-scroll-disabled="busy"
                  infinite-scroll-distance="10">
-              <img src="static/loading-svg/loading-spinning-bubbles.svg" v-show="Loading">
+              <img src="@/assets/loading-spinning-bubbles.svg" v-show="Loading">
             </div>
           </div>
         </div>
@@ -84,18 +84,6 @@
     <p slot="message">请先登录，否则无法加入购物车</p>
     <div slot="btnGroup">
       <a href="javascript:;" class="btn btn--m" @click="mdShow = false">关闭</a>
-    </div>
-  </Modal>
-  <Modal :mdShow="mdShowCart" @close="closeModal">
-    <p slot="message">
-      <svg class="icon-status-ok">
-        <use xlink:href="#icon-status-ok"></use>
-      </svg>
-      <span>加入购物车成功</span>
-    </p>
-    <div slot="btnGroup">
-      <a href="javascript:;" class="btn btn--m" @click="mdShowCart = false">继续购物</a>
-      <router-link href="javascript:;" class="btn btn--m" to="/cart">查看购物车</router-link>
     </div>
   </Modal>
   <NavFooter></NavFooter>
@@ -149,8 +137,7 @@ export default {
       pageSize: 8, // 每页内容
       busy: true,
       Loading: false,
-      mdShow: false,
-      mdShowCart: false
+      mdShow: false
     }
   },
   methods: {
@@ -230,7 +217,13 @@ export default {
       apiAddCart({productId: productId})
         .then(res => {
           if (res.status === 0) {
-            this.mdShowCart = true
+            this.$toast({
+              title: '',
+              content: `加入购物车成功`,
+              type: 'success',
+              onShow () {},
+              onHide () {}
+            })
             this.$store.commit('updateCartCount', 1)
           } else {
             this.mdShow = true
@@ -239,7 +232,6 @@ export default {
     },
     closeModal () {
       this.mdShow = false
-      this.mdShowCart = false
     }
   },
   components: {
@@ -258,8 +250,16 @@ export default {
     width: 28%;
   }
   input[type='button'] {
-    padding: .1rem;
-    width: auto;
+    padding: .3rem .5rem;
+    font-size: 1.2rem;
+    border: 1px solid #0381aa;
+    color: #fff;
+    background-color: #00a7de;
+    display: inline-block;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
   }
 }
 </style>
