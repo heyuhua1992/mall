@@ -12,6 +12,7 @@ import '@/assets/scss/product.scss'
 import '@/assets/scss/checkout.scss'
 import {currency} from '@/util/currency'
 import toast from '@/util/toast'
+import TipsMessageCenter from '@/util/tipsMessageCenter'
 
 Vue.config.productionTip = false
 Vue.use(infiniteScroll)
@@ -22,6 +23,8 @@ Vue.use(VueLazyLoad, {
 // 全局过滤器
 Vue.filter('currency', currency) // 总价格过滤器
 Vue.use(toast)
+Vue.use(TipsMessageCenter)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

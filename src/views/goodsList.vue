@@ -17,7 +17,7 @@
             <use xlink:href="#icon-arrow-short"></use>
           </svg>
         </a>
-        <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
+        <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">筛选</a>
       </div>
       <div class="accessory-result">
         <!-- filter -->
@@ -217,12 +217,11 @@ export default {
       apiAddCart({productId: productId})
         .then(res => {
           if (res.status === 0) {
-            this.$toast({
-              title: '',
-              content: `加入购物车成功`,
+            this.$tipsMessageCenter({
+              content: '加入购物车成功',
               type: 'success',
-              onShow () {},
-              onHide () {}
+              onShow: () => {},
+              onHide: () => {}
             })
             this.$store.commit('updateCartCount', 1)
           } else {

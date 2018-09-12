@@ -2,7 +2,7 @@
 <div>
   <NavHeader></NavHeader>
   <NavBread>
-    <span slot="bread">选择地址</span>
+    <span slot="bread">地址信息</span>
   </NavBread>
   <div class="checkout-page">
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -40,11 +40,11 @@
     </svg>
     <div class="container">
       <div class="checkout-addr">
-        <div class="page-title-normal">
+        <!-- <div class="page-title-normal">
           <h2 class="page-title-h2">
-            <span>check out</span>
+            <span>正在下单...</span>
           </h2>
-        </div>
+        </div> -->
         <!-- 检查步骤 -->
         <div class="check-step">
           <ul>
@@ -52,7 +52,7 @@
               <span>确认</span> 地址
             </li>
             <li>
-              <span>查看</span> 订单
+              <span>预览</span> 订单
             </li>
             <li>
               <span>选择</span> 支付
@@ -132,28 +132,33 @@
             <span>送货方式</span>
           </h2>
         </div>
-        <div class="lemall-msg-info hidden">
-          <span>The region you selected is not within our delivery area. Please select another shipping address within our delivery areas.</span>
-        </div>
+        <!-- <div class="lemall-msg-info hidden">
+          <span>您选择的地区不在我们的送货区域内。请在我们的送货区域内选择其他送货地址.</span>
+        </div> -->
         <div class="shipping-method-wrap">
           <div class="shipping-method">
             <ul>
               <li class="check">
                 <div class="name">
-                  Standard shipping
+                  邮政快递
                 </div>
                 <div class="price">
-                  Free
+                  ￥10
                 </div>
                 <div class="shipping-tips">
-                  <p>Once shipped，Order should arrive in the destination in 1-7 business days</p>
+                  <p>7日内送达</p>
                 </div>
               </li>
             </ul>
           </div>
         </div>
-        <div class="next-btn-wrap">
-          <router-link :to="{path: '/orderConfirm', query: {addressId: selectedAddrId}}" class="btn btn--m btn--red">下一步</router-link>
+        <div class="order-foot-wrap">
+          <div class="prev-btn-wrap">
+            <a class="btn btn--m" @click="$router.go(-1)">上一步</a>
+          </div>
+          <div class="next-btn-wrap">
+            <router-link :to="{path: '/orderConfirm', query: {addressId: selectedAddrId}}" class="btn btn--m btn--red">下一步</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -214,6 +219,12 @@ export default {
         .then(res => {
           if (res.status === 0) {
             this.init()
+            this.$tipsMessageCenter({
+              content: '设置成功',
+              type: 'success',
+              onShow: () => {},
+              onHide: () => {}
+            })
           }
         })
     },

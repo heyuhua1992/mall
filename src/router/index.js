@@ -28,6 +28,7 @@ router.beforeEach((to, from, next) => {
             }
           })
         }
+        sessionStorage.removeItem('userName')
         next()
       }
     })

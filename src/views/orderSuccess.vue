@@ -1,19 +1,29 @@
 <template>
 <div>
   <NavHeader></NavHeader>
-  <NavBread></NavBread>
+  <NavBread>
+    <span slot="bread">支付成功</span>
+  </NavBread>
   <div class="container">
-    <div class="page-title-normal">
-      <h2 class="page-title-h2"><span>check out</span></h2>
-    </div>
+      <!-- <div class="page-title-normal">
+        <h2 class="page-title-h2"><span>正在下单...</span></h2>
+      </div> -->
     <!-- 进度条 -->
     <div class="check-step">
-      <ul>
-        <li class="cur"><span>Confirm</span> address</li>
-        <li class="cur"><span>View your</span> order</li>
-        <li class="cur"><span>Make</span> payment</li>
-        <li class="cur"><span>Order</span> confirmation</li>
-      </ul>
+          <ul>
+            <li class="cur">
+              <span>确认</span> 地址
+            </li>
+            <li class="cur">
+              <span>预览</span> 订单
+            </li>
+            <li class="cur">
+              <span>选择</span> 支付
+            </li>
+            <li class="cur">
+              <span>订单</span> 确认
+            </li>
+          </ul>
     </div>
 
     <div class="order-create">

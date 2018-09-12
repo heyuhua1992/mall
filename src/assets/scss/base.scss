@@ -710,6 +710,7 @@ a:hover {
 }
 
 .select-self-area {
+  display: flex;
   width: auto;
   background: #f0f0f0;
   border-radius: 3px;
@@ -728,7 +729,6 @@ a:hover {
   color: #605F5F;
   text-align: left;
   font-size: 16px;
-  overflow: hidden;
 }
 
 .select-self-area .select-btn {
@@ -1243,10 +1243,6 @@ html {
     padding-top: 30px;
   }
 
-  .md-modal .md-close {
-    display: none;
-  }
-
   .md-modal .md-tit {
     padding: 0 15px;
   }
@@ -1286,7 +1282,10 @@ html {
     display: flex;
     margin-top: 0;
   }
-
+  .md-modal .btn-wrap>div {
+    display: flex;
+    width: 100%;
+  }
   .md-modal .btn-wrap .btn {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
@@ -1305,4 +1304,5 @@ html {
   .md-modal.modal-normal .content-tit {
     font-size: 12px;
   }
+  
 }

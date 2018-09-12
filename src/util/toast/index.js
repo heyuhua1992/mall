@@ -31,7 +31,7 @@ export default {
         let div = document.getElementById(id) || document.createElement('div')
         if (!document.getElementById(id)) {
           div.setAttribute('id', id)
-          div.setAttribute('style', 'display:flex!important;')
+          div.setAttribute('style', 'position: fixed;top: 0;right: 0 ;z-index: 10000;')
         }
         toast.$el.setAttribute('data-toast', `my-toast${date}`)
         div.appendChild(toast.$el)

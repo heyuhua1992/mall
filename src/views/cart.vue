@@ -55,7 +55,7 @@
               <li>单价</li>
               <li>数量</li>
               <li>金额</li>
-              <li>操作</li>
+              <li>删除</li>
             </ul>
           </div>
           <ul class="cart-item-list">

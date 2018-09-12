@@ -19,7 +19,7 @@
     <div class="navbar">
       <div class="navbar-left-container">
         <a href="/">
-          <img class="navbar-brand-logo" src="static/logo.png"></a>
+          <img class="navbar-brand-logo" src="static/logo.gif" width="200" height="80" title="home"></a>
       </div>
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="md-modal modal-msg md-modal-transition md-show" v-if="loginModalFlag">
-      <div class=md-modal-inner>
+      <div class="md-modal-inner">
         <div class="md-top">
           <div class="md-title">
             登陆
@@ -53,7 +53,7 @@
                 用户名或密码错误
               </span>
             </div>
-            <ul>
+            <ul class="input-wrap">
               <li class="regi_form_input">
                 <i class="icon IconPeople"></i>
                 <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input">
@@ -85,8 +85,8 @@ export default {
   },
   data () {
     return {
-      userName: '',
-      userPwd: '',
+      userName: 'admin',
+      userPwd: '123456',
       errorTip: false,
       loginModalFlag: false
     }

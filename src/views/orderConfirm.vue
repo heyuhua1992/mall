@@ -30,31 +30,39 @@
   </svg>
   <div class="container">
     <div class="checkout-order">
-      <div class="page-title-normal">
-        <h2 class="page-title-h2"><span>check out</span></h2>
-      </div>
-      <!-- process step -->
+      <!-- <div class="page-title-normal">
+        <h2 class="page-title-h2"><span>正在下单...</span></h2>
+      </div> -->
+      <!-- 检查步骤 -->
       <div class="check-step">
-        <ul>
-          <li class="cur"><span>Confirm</span> address</li>
-          <li class="cur"><span>View your</span> order</li>
-          <li><span>Make</span> payment</li>
-          <li><span>Order</span> confirmation</li>
-        </ul>
+          <ul>
+            <li class="cur">
+              <span>确认</span> 地址
+            </li>
+            <li class="cur">
+              <span>预览</span> 订单
+            </li>
+            <li>
+              <span>选择</span> 支付
+            </li>
+            <li>
+              <span>订单</span> 确认
+            </li>
+          </ul>
       </div>
 
       <!-- order list -->
       <div class="page-title-normal checkout-title">
-        <h2><span>Order content</span></h2>
+        <h2><span>订单详情</span></h2>
       </div>
       <div class="item-list-wrap confirm-item-list-wrap">
         <div class="cart-item order-item">
           <div class="cart-item-head">
             <ul>
-              <li>Order contents</li>
-              <li>Price</li>
-              <li>Quantity</li>
-              <li>Subtotal</li>
+              <li>订单信息</li>
+              <li>单价</li>
+              <li>数量</li>
+              <li>单品总价</li>
             </ul>
           </div>
           <ul class="cart-item-list">
@@ -78,7 +86,7 @@
                       <span class="select-ipt">×{{item.productNum}}</span>
                     </div>
                   </div>
-                  <div class="item-stock item-stock-no">In Stock</div>
+                  <!-- <div class="item-stock item-stock-no">In Stock</div> -->
                 </div>
               </div>
               <div class="cart-tab-4">
@@ -118,7 +126,7 @@
           <button class="btn btn--m" @click="$router.go(-1)">上一步</button>
         </div>
         <div class="next-btn-wrap">
-          <button class="btn btn--m btn--red" @click="payMent">支付</button>
+          <button class="btn btn--m btn--red" :class="{'btn--dis': orderTotal <= 0}" @click="payMent">去支付</button>
         </div>
       </div>
     </div>
@@ -131,7 +139,7 @@
 import NavHeader from '@/components/navHeader'
 import NavFooter from '@/components/navFooter'
 import NavBread from '@/components/navBread'
-import {apiCartList, apiPayMent} from '@/api/api'
+import {apiCartList} from '@/api/api'
 export default {
   mounted () {
     this.init()
@@ -159,20 +167,16 @@ export default {
         })
     },
     payMent () {
-      apiPayMent({
-        addressId: this.$route.query.addressId,
-        orderTotal: this.orderTotal
-      })
-        .then(res => {
-          if (res.status === 0) {
-            this.$router.push({
-              path: '/orderSuccess',
-              query: {
-                orderId: res.result.orderId
-              }
-            })
-          }
+      if (this.orderTotal <= 0) {
+        this.$tipsMessageCenter({
+          content: '0元单，不能存在',
+          type: 'error',
+          onShow: () => {},
+          onHide: () => {}
         })
+      } else {
+        this.$router.push({path: '/orderPay', query: {addressId: this.$route.query.addressId}})
+      }
     }
   },
   components: {

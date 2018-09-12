@@ -37,3 +37,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+@media only screen and (max-width: 767px) {
+
+}
+</style>
