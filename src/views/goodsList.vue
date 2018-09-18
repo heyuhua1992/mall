@@ -245,7 +245,7 @@ export default {
 <style lang="scss">
 .priceFilter {
   input {
-    padding: .2rem;
+    padding: .2rem!important;
     width: 28%;
   }
   input[type='button'] {
